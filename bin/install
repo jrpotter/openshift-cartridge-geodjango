@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Install script only called once upon initial creation
+
+# We install all libraries into the usr directory, as these are
+# shared amongst all instances of this cartridge.
+
