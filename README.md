@@ -1,0 +1,2 @@
+Openshift GeoDjango Cartridge
+=============================
