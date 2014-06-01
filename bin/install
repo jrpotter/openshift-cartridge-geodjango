@@ -2,15 +2,9 @@
 # Called once during the initial instantiation of the cartridge
 # Here we create the virtual environment and install the initial 
 # python packages
-
-# Create the virtual environment
-function python-context-stdin() {
-    scl enable python33 -
-}
-
-python-context-stdin <<EOF
+scl enable python33 - <<EOF
     python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
     source $VIRTUAL_ENV_DIR/bin/activate
-    pip install django gunicorn aiohttp dj_static pyscopg2
+    pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
     deactivate
 EOF
