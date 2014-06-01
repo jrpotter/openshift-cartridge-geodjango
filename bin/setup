@@ -34,7 +34,9 @@ echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
 # For convenience's sake, get-pip.py is included in the python tar
-$PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
+pushd $PYTHON_DIR/bin > /dev/null
+./python3 pyvenv $VIRTUAL_ENV_DIR
 source $VIRTUAL_ENV_DIR/bin/activate
-python $PYTHON_DIR/bin/get-pip.py
+./python3 $PYTHON_DIR/bin/get-pip.py
 deactivate
+popd > /dev/null
