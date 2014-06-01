@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # Called once during the initial instantiation of the cartridge
+
 # Here we create the virtual environment and install the initial 
 # python packages
-scl enable python33 - <<EOF
-    $PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
-    source $VIRTUAL_ENV_DIR/bin/activate
-    pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
-    deactivate
-EOF
+$PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
+source $VIRTUAL_ENV_DIR/bin/activate
+pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
+deactivate
