@@ -12,7 +12,7 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
     if [ -z ${!env} ]; then
         echo "Creating environment variable $env"
         export ${env}=$OPENSHIFT_GEO_DIR/usr/$basename
-        echo ${!env} > $ENV_PATH/$env.erb
+        echo ${!env} > $ENV_PATH/$env
     else
         echo "$env already defined"
     fi
@@ -24,13 +24,13 @@ done
 # Here we create environment variables specific to GeoIP (i.e. the
 # library path and path of database file used in IP address lookups)
 echo "Saving GEOIP_PATH and GEOIP_LIBRARY_PATH"
-echo "$GEOIP_DIR/lib/GeoIP.dat" > $ENV_PATH/GEOIP_PATH.erb
-echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH.erb
+echo "$GEOIP_DIR/lib/GeoIP.dat" > $ENV_PATH/GEOIP_PATH
+echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH
 
 # Save the virtual environment path
 echo "Saving VIRTUAL_ENV_PATH"
 export VIRTUAL_ENV_DIR="$OPENSHIFT_GEO_DIR/venv"
-echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR.erb
+echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
 # For convenience's sake, get-pip.py is included in the python tar

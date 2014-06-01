@@ -9,7 +9,7 @@ function start() {
     # Starting up the virtual environment while within the virtual
     # environment does not cause any problems
     echo "(Re)starting virtual environemt"
-    source $VIRTUAL_ENV_DIR/bin/activate
+    source "$OPENSHIFT_GEO_DIR"venv/bin/activate
 
     # The configuration file lies in the repo directory for 
     # modification if ever necessary by application (it MUST run 
