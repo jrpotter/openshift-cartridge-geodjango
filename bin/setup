@@ -17,7 +17,7 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
         echo "$env already defined"
     fi
 
-    # Extract libraries
+    # Extract libraries and install
     if [ ! -d $env ]; then
         tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
     fi
