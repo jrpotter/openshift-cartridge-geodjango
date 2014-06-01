@@ -1,6 +1,45 @@
 #!/usr/bin/env bash
 # Install script only called once upon initial creation
 
-# We install all libraries into the usr directory, as these are
-# shared amongst all instances of this cartridge.
+function install() {
+    name=$( echo ${1}_DIR | tr '[:lower:]' '[:upper:]' )
 
+    # We install all libraries into the usr directory, as these are
+    # shared amongst all instances of this cartridge. So no need to
+    # copy over if it already exists
+    if [ ! -d ${!name} ]; then
+
+        # Extract gzipped tar file out to temp for compilation
+        mkdir $OPENSHIFT_GEO_DIR/usr/$1
+        tar -xf $OPENSHIFT_GEO_DIR/usr/opt/$1.tar.gz -C /tmp
+
+        pushd /tmp/$1 > /dev/null
+
+        # With some installations, additional steps are required
+        # before the installation should occur (e.g. GeoIP). Run
+        # these here
+        if [ -n $2 ]; then $2; fi
+
+        # Configure
+        echo "Configuring $1"
+        ./configure --prefix=$OPENSHIFT_GEO_DIR/usr/$1
+
+        # Install
+        echo "Installing $1"
+        make
+        make install
+
+        popd > /dev/null
+    fi
+}
+
+# GeoIP must be "bootstrapped" before configuration, which also
+# installs the necessary database file for use in IP address lookups
+function _geoip_install() {
+    ./bootstrap
+    cp "data/GeoIP.dat" $GEOIP_DIR
+}
+
+# Begin the installation process
+install python
+install geoip _geoip_install

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Setup is called during each incompatible upgrade
+
+ENV_PATH=$OPENSHIFT_GEO_DIR/env
 
 # Create all environment variables for use in the install script
 # These are based on the packages distributed in usr/opt
@@ -8,8 +11,19 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
     env=$( echo "${basename}_DIR" | tr '[:lower:]' '[:upper:]' )
     if [ -z ${!env} ]; then
         echo "Creating environment variable $env"
-        echo "$OPENSHIFT_GEO_DIR/usr/$basename" > $OPENSHIFT_GEO_DIR/env/$env
+        export ${env}=$OPENSHIFT_GEO_DIR/usr/$basename
+        echo ${!env} > $OPENSHIFT_GEO_DIR/env/$env
     else
         echo "$env already defined"
     fi
 done
+
+# Here we create environment variables specific to GeoIP (i.e. the
+# library path and path of database file used in IP address lookups)
+echo "Saving GEOIP_PATH and GEOIP_LIBRARY_PATH"
+echo "$GEOIP_DIR/GeoIP.dat" > $ENV_PATH/GEOIP_PATH
+echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH
+
+# Save the virtual environment path
+echo "$OPENSHIFT_GEO_DIR/venv" > $ENV_PATH/VIRTUAL_ENV_DIR
+
