@@ -12,9 +12,9 @@ function install() {
     if [ ! -d ${!name} ]; then
 
         # Extract gzipped tar file out to temp for compilation
-        mkdir $OPENSHIFT_GEO_DIR/usr/$1
         tar -xf $OPENSHIFT_GEO_DIR/usr/opt/$1.tar.gz -C /tmp
 
+        mkdir ${!name}
         pushd /tmp/$1 > /dev/null
 
         # With some installations, additional steps are required
@@ -24,12 +24,11 @@ function install() {
 
         # Configure
         echo "Configuring $1"
-        ./configure --prefix=$OPENSHIFT_GEO_DIR/usr/$1
+        ./configure --prefix=${!name}
 
         # Install
         echo "Installing $1"
-        make
-        make install
+        make && make install
 
         popd > /dev/null
     fi
