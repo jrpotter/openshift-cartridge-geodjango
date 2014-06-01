@@ -29,10 +29,13 @@ echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH
 
 # Save the virtual environment path
 echo "Saving VIRTUAL_ENV_PATH"
-export VIRTUAL_ENV_DIR=$PYTHON_DIR/bin/venv
+export VIRTUAL_ENV_DIR=$OPENSHIFT_GEO_DIR/venv
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
 pushd $PYTHON_DIR/bin > /dev/null
-./python3 pyvenv venv
+./python3 pyvenv $VIRTUAL_ENV_DIR
 popd > /dev/null
+
+tree $OPENSHIFT_GEO_DIR
+exit 1
