@@ -8,7 +8,6 @@ function start() {
 
     # Starting up the virtual environment while within the virtual
     # environment does not cause any problems
-    scl enable python33 - <<EOF
     source $VIRTUAL_ENV_DIR/bin/activate
 
     # The configuration file lies in the repo directory for 
@@ -16,7 +15,6 @@ function start() {
     # in the background though! Ensure daemon = True)
     export PYTHONPATH=$PYTHONPATH:$OPENSHIFT_REPO_DIR
     nohup gunicorn -c $OPENSHIFT_GEO_DIR/conf/gunicorn.py config.wsgi:application > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1
-EOF
 }
 
 # Disables the cartridge - reverses the processes started by
