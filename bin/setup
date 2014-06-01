@@ -33,4 +33,5 @@ export VIRTUAL_ENV_DIR="$OPENSHIFT_GEO_DIR/venv"
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
+
 $PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
