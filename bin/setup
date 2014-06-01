@@ -16,6 +16,11 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
     else
         echo "$env already defined"
     fi
+
+    # Extract files
+    if [ ! -d ${!env} ]; then
+        tar -xf $file -> $OPENSHIFT_GEO_DIR/usr
+    fi
 done
 
 # Here we create environment variables specific to GeoIP (i.e. the
@@ -28,3 +33,9 @@ echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH
 echo "Saving VIRTUAL_ENV_PATH"
 export VIRTUAL_ENV_DIR=$OPENSHIFT_GEO_DIR/venv
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
+
+# Here we create the virtual environment and install the initial packages
+$PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
+source $VIRTUAL_ENV_DIR/bin/activate
+pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
+deactivate
