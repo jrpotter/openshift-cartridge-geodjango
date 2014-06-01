@@ -19,7 +19,7 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
 
     # Extract files
     if [ ! -d ${!env} ]; then
-        tar -xf $file -> $OPENSHIFT_GEO_DIR/usr
+        tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
     fi
 done
 
