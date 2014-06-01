@@ -37,8 +37,6 @@ function python-context-stdin() {
     scl enable python33 -
 }
 
-pushd $PYTHON_DIR/bin > /dev/null
 python-context-stdin <<EOF
-    ./python3 pyvenv $VIRTUAL_ENV_DIR
+    python3 pyvenv $VIRTUAL_ENV_DIR
 EOF
-popd > /dev/null
