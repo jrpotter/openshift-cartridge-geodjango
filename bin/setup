@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Create all environment variables for use in the install script
+# These are based on the packages distributed in usr/opt
+for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
+    filename=${file##*/}
+    basename=${filename%%.*}
+    env=$( echo "${basename}_DIR" | tr '[:lower:]' '[:upper:]' )
+    if [ -z ${!env} ]; then
+        echo "Creating environment variable $env"
+        echo "$OPENSHIFT_GEO_DIR/usr/$basename" > $OPENSHIFT_GEO_DIR/env/$env
+    else
+        echo "$env already defined"
+    fi
+done
