@@ -37,4 +37,5 @@ pushd $PYTHON_DIR/bin > /dev/null
 ls -l py*
 ./python3 -c "print('test')"
 # ./python3 pyvenv $VIRTUAL_ENV_DIR
+exit 1
 popd > /dev/null
