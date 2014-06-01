@@ -14,7 +14,14 @@ function start() {
     # modification if ever necessary by application (it MUST run 
     # in the background though! Ensure daemon = True)
     echo "Starting gunicorn"
+    echo "==================="
+    which gunicorn
+    echo "==================="
+    cat $OPENSHIFT_GEO_DIR/conf/gunicorn.py
+    echo "==================="
     export PYTHONPATH=$PYTHONPATH:$OPENSHIFT_REPO_DIR
+    echo "Python path: $PYTHONPATH"
+    echo "==================="
     nohup gunicorn -c $OPENSHIFT_GEO_DIR/conf/gunicorn.py config.wsgi:application > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1
 }
 
