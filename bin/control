@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# Used to control the various actions of the cartridge
+
+# Used to begin the cartridge - must start up the virtual environment
+# and start up the gunicorn server
+function start() {
+    echo "Starting Cartridge"
+
+    # Starting up the virtual environment while within the virtual
+    # environment does not cause any problems
+    echo "(Re)starting virtual environemt"
+    source $VIRTUAL_ENV_DIR/bin/activate
+
+    # The configuration file lies in the repo directory for 
+    # modification if ever necessary by application (it MUST run 
+    # in the background though! Ensure daemon = True)
+    echo "Starting gunicorn"
+    export PYTHONPATH=$PYTHONPATH:$OPENSHIFT_REPO_DIR
+    nohup gunicorn -c $OPENSHIFT_REPO_DIR/config/gunicorn.py > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1
+}
+
+# Disables the cartridge - reverses the processes started by
+# the `start` function
+function stop() {
+    echo "Stopping Cartridge"
+
+    # Try to kill gunicorn elegantly
+    if [ -s $OPENSHIFT_GEO_DIR/run/appserver.pid ]; then
+        i=0
+        pid=$( cat $OPENSHIFT_GEO_DIR/run/appserver.pid )
+        while kill $pid > /dev/null 2>&1; do
+            i=$(( $i + 1 ))
+            [ $i -gt 10 ] && break
+            sleep 1 
+        done
+        kill -9 $pid > /dev/null 2>&1 || :
+
+        # Cleanup
+        rm -f $OPENSHIFT_GEO_DIR/run/appserver.pid
+        if [ -S $OPENSHIFT_GEO_DIR/run/appserver.sock ]; then
+            rm -f $OPENSHIFT_GEO_DIR/run/appserver.sock
+        fi
+    fi
+}
+
+# Shuts the cartridge down and starts it back up
+function restart() {
+    echo "Restarting Cartridge"
+    stop
+    start
+}
+
+# This performs the same action as restart
+function reload() {
+    echo "Reloading Cartridge"
+    restart
+}
+
+# Load up the current server address and see if a valid response
+# was received or not
+function status() {
+    echo "Checking Status..."
+    curl -s -m 30 http://$OPENSHIFT_GEO_IP:$OPENSHIFT_GEO_PORT &> /dev/null
+    if [ $? -eq 0 ]; then
+        echo "Application is currently running"
+        return 0
+    else
+        echo "Application is not currently running"
+        return 1
+    fi
+}
+
+# Clean up files that are no longer needed
+function tidy() {
+    echo "Tidying Cartridge"
+    rm -rf $OPENSHIFT_GEO_DIR/log/*
+    rm -rf /tmp/*
+}
+
+# We note the virtual environment must be created (during the install
+# process) and simply ensure it runs before building and deploying
+function pre-build() {
+    echo "Pre-Building Cartridge"
+    source $VIRTUAL_ENV_DIR/bin/activate
+}
+
+# Unlike other python cartridges, I've decided to forsake the setup.py
+# file and instead solely rely on a requirements.txt file for 
+# dependency resolving
+function build() {
+    echo "Building Cartridge"
+    if [ -f $OPENSHIFT_REPO_DIR/requirements.txt ]; then
+        pip install -r $OPENSHIFT_REPO_DIR/requirements.txt
+    fi
+}
+
+# Manage static files (JS/CSS) and place them in an accessible
+# directory (the DATA dir where files are guaranteed to remain is
+# recommended)
+function deploy() {
+    echo "Deploying Cartridge"
+    echo "Collecting static files"
+    python $OPENSHIFT_REPO_DIR/manage.py collectstatic --noinput
+}
+
+# Route
+case $1 in 
+    start) start ;;
+    stop) stop  ;;
+    restart) restart ;;
+    reload) reload ;;
+    status) status ;;
+    pre-build) pre-build ;;
+    build) build ;;
+    deploy) deploy ;;
+    *) exit 0
+esac
