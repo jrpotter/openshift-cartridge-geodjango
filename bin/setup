@@ -37,11 +37,7 @@ echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 # Here we create the virtual environment and install the initial packages
 $PYTHON_DIR/bin/python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
 source $VIRTUAL_ENV_DIR/bin/activate
-echo "====================="
-pip which
-echo "====================="
-tree $OPENSHIFT_GEO_DIR
-echo "====================="
-exit 1
 pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
+tree $VIRTUAL_ENV_DIR
+exit 1
 deactivate
