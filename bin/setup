@@ -16,11 +16,6 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
     else
         echo "$env already defined"
     fi
-
-    # Extract libraries and install
-    if [ ! -d $env ]; then
-        tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
-    fi
 done
 
 # Here we create environment variables specific to GeoIP (i.e. the
