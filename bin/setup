@@ -18,7 +18,9 @@ for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
     fi
 
     # Extract libraries
-    tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
+    if [ ! -d $env ]; then
+        tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
+    fi
 done
 
 # Here we create environment variables specific to GeoIP (i.e. the
@@ -32,11 +34,3 @@ echo "Saving VIRTUAL_ENV_PATH"
 export VIRTUAL_ENV_DIR=$OPENSHIFT_GEO_DIR/venv
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
-# Create the virtual environment
-function python-context-stdin() {
-    scl enable python33 -
-}
-
-python-context-stdin <<EOF
-    python3 $PYTHON_DIR/bin/pyvenv $VIRTUAL_ENV_DIR
-EOF
