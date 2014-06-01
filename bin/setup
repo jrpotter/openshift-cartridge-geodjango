@@ -34,8 +34,7 @@ echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
 pushd $PYTHON_DIR/bin > /dev/null
-./python3 pyvenv $VIRTUAL_ENV_DIR
+ls -l py*
+./python3 -c "print('test')"
+# ./python3 pyvenv $VIRTUAL_ENV_DIR
 popd > /dev/null
-
-tree $OPENSHIFT_GEO_DIR
-exit 1
