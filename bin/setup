@@ -29,14 +29,14 @@ echo "$GEOIP_DIR/lib/libGeoIP.so" > $ENV_PATH/GEOIP_LIBRARY_PATH
 
 # Save the virtual environment path
 echo "Saving VIRTUAL_ENV_PATH"
-export VIRTUAL_ENV_DIR="$OPENSHIFT_GEO_DIR/venv"
+export VIRTUAL_ENV_DIR="$OPENSHIFT_DATA_DIR/venv"
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Create the virtual environment
 # For convenience's sake, get-pip.py is included in the python tar
 pushd $PYTHON_DIR/bin > /dev/null
-./python3 pyvenv $OPENSHIFT_GEO_DIR/venv
-source $OPENSHIFT_GEO_DIR/venv/bin/activate
+./python3 pyvenv $VIRTUAL_ENV_DIR
+source $VIRTUAL_ENV_DIR/bin/activate
 ./python3 $PYTHON_DIR/bin/get-pip.py
 deactivate
 popd > /dev/null
