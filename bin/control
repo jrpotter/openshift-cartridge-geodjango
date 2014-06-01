@@ -9,6 +9,8 @@ function start() {
     # Starting up the virtual environment while within the virtual
     # environment does not cause any problems
     echo "(Re)starting virtual environemt"
+    echo "$VIRTUAL_ENV_DIR/bin/activate"
+    tree .
     source $VIRTUAL_ENV_DIR/bin/activate
 
     # The configuration file lies in the repo directory for 
