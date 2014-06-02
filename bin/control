@@ -9,20 +9,12 @@ function start() {
     # Starting up the virtual environment while within the virtual
     # environment does not cause any problems
     source $VIRTUAL_ENV_DIR/bin/activate
-    echo "=============="
-    env
-    echo "=============="
-    which pip
-    echo "=============="
-    which python
-    echo "=============="
-    exit 1
 
     # The configuration file lies in the repo directory for 
     # modification if ever necessary by application (it MUST run 
     # in the background though! Ensure daemon = True)
     export PYTHONPATH=$PYTHONPATH:$OPENSHIFT_REPO_DIR
-    nohup gunicorn -c $OPENSHIFT_GEO_DIR/conf/gunicorn.py config.wsgi:application > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1
+    nohup gunicorn $OPENSHIFT_GEO_IP:$OPENSHIFT_GEO_PORT config.wsgi:application > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1 &
 }
 
 # Disables the cartridge - reverses the processes started by
