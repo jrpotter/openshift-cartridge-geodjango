@@ -9,6 +9,14 @@ function start() {
     # Starting up the virtual environment while within the virtual
     # environment does not cause any problems
     source $VIRTUAL_ENV_DIR/bin/activate
+    echo "=============="
+    env
+    echo "=============="
+    which pip
+    echo "=============="
+    which python
+    echo "=============="
+    exit 1
 
     # The configuration file lies in the repo directory for 
     # modification if ever necessary by application (it MUST run 
