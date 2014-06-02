@@ -3,24 +3,11 @@
 
 ENV_PATH=$OPENSHIFT_GEO_DIR/env
 
-# Create all environment variables for use in later scripts
-# These are based on the packages distributed in usr/opt
-for file in $OPENSHIFT_GEO_DIR/usr/opt/*; do
-    filename=${file##*/}
-    basename=${filename%%.*}
-    env=$( echo "${basename}_DIR" | tr '[:lower:]' '[:upper:]' )
-    if [ -z ${!env} ]; then
-        echo "Creating environment variable $env"
-        export ${env}=$OPENSHIFT_GEO_DIR/usr/$basename
-        echo ${!env} > $ENV_PATH/$env
-    else
-        echo "$env already defined"
-    fi
-
-    # Extract files
-    if [ ! -d ${!env} ]; then
-        tar -xf $file -C $OPENSHIFT_GEO_DIR/usr
-    fi
+# Create environment variables for each lib
+for file in $OPENSHIFT_GEO_DIR/usr/*; do
+    name=$( echo ${file##*/}_DIR | tr '[:lower:]' '[:upper:]' )
+    echo $file > $ENV_PATH/$name
+    export ${name}=$file
 done
 
 # Here we create environment variables specific to GeoIP (i.e. the
@@ -35,13 +22,11 @@ export VIRTUAL_ENV_DIR=$OPENSHIFT_GEO_DIR/venv
 echo $VIRTUAL_ENV_DIR > $ENV_PATH/VIRTUAL_ENV_DIR
 
 # Here we create the virtual environment and install the initial packages
-source $OPENSHIFT_GEO_DIR/lib/utils
-update-configuration
+vars=(PATH MANPATH LD_LIBRARY_PATH XDG_DATA_DIRS PKG_CONFIG_PATH)
+for i in ${vars[@]}; do
+    echo $(scl enable python33 "printenv $i") > $ENV_PATH/$i
+    export ${i}=$(cat $ENV_PATH/$i)
+done
 
 # Install necessary pip packages
-scl enable python33 - <<EOF
-    virtualenv $VIRTUAL_ENV_DIR
-    source $VIRTUAL_ENV_DIR/bin/activate
-    pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt 
-    deactivate
-EOF
+virtualenv $VIRTUAL_ENV_DIR

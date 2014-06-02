@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Run once after the setup script
+
+source $VIRTUAL_ENV_DIR/bin/activate
+pip install -r $OPENSHIFT_GEO_DIR/conf/requirements.txt
+deactivate
