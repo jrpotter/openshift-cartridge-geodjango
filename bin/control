@@ -13,8 +13,9 @@ function start() {
     # The configuration file lies in the repo directory for 
     # modification if ever necessary by application (it MUST run 
     # in the background though! Ensure daemon = True)
-    export PYTHONPATH=$PYTHONPATH:$OPENSHIFT_REPO_DIR
+    pushd $OPENSHIFT_REPO_DIR > /dev/null
     nohup gunicorn $OPENSHIFT_GEO_IP:$OPENSHIFT_GEO_PORT config.wsgi:application > "$OPENSHIFT_GEO_DIR/logs/appserver.log" 2>&1 &
+    popd > /dev/null
 }
 
 # Disables the cartridge - reverses the processes started by
